@@ -119,7 +119,11 @@ neighbor.
 ......................................................................*)
 
 let neighbors (place1 : residence) (place2 : residence) : bool =
-  failwith "neighbors not implemented" ;;
+  match place1, place2 with
+  | House a1, House a2 -> (a1.street = a2.street) && (a1.zipcode = a2.zipcode)
+  | House a1, Apartment (i, a2) -> (a1.street = a2.street) && (a1.zipcode = a2.zipcode)
+  | Apartment (i, a1), House a2 -> (a1.street = a2.street) && (a1.zipcode = a2.zipcode)
+  | Apartment (i1,a1), Apartment (i2, a2) -> (a1.street = a2.street) && (a1.zipcode = a2.zipcode);;
      
 (*......................................................................
 Exercise 5: Lucky 7
@@ -132,9 +136,18 @@ residence he will pick. If the two street numbers are equidistant from
 7, assume he will always prefer the first one. He has no other
 preferences.
 ......................................................................*)
-let close_to_seven (r1 : residence) (r2 : residence) : residence =
-  failwith "close_to_seven not implemented" ;;
-     
+let seven_dist (n : int) : int = abs (n - 7);;
+
+let close_to_seven (r1 : residence) (r2 : residence) : residence  = 
+(*   let helper (House t1 : residence) (House t2: residence) :  bool =
+    (seven_dist t1.mailbox) < (seven_dist t2.mailbox) in
+  if (helper r1 r2) then r1 else r2;;  *)
+  match r1, r2 with
+  | House t1, House t2  -> if (seven_dist t1.mailbox) < (seven_dist t2.mailbox) then r1 else r2
+  | House t1, Apartment (_,t2) -> if (seven_dist t1.mailbox) < (seven_dist t2.mailbox) then r1 else r2
+  | Apartment (_,t1), House t2 -> if (seven_dist t1.mailbox) < (seven_dist t2.mailbox) then r1 else r2
+  | Apartment (_,t1), Apartment (_,t2) -> if (seven_dist t1.mailbox) < (seven_dist t2.mailbox) then  r1 else r2;;
+
 (*......................................................................
 Exercise 6: Bob has recently gotten a raise, so now he has a whole
 list of residences to choose from. He has the same preferences,
@@ -147,8 +160,16 @@ mind that Bob is picky and so some circumstances may arise in which
 there are no houses on Bob's list. For that reason, you should return
 a residence option type.
 ......................................................................*)
-let choose_residence =
-  fun _ -> failwith "choose_residence not implemented" ;;
+
+let choose_residence (h::t : residence list) : residence option =
+  let rec choose (lst: residence list) (curr : residence) : residence option =
+    match lst  with
+    | [] -> None
+    | [h] -> Some (close_to_seven h curr)
+    | h::next::t -> (choose t (close_to_seven h next)) in
+  match h::t with
+  | [] ->  None
+  | h::t -> (choose t h) ;;
 (*......................................................................
 Exercise 7: When buyers purchase a new residence in Camlville, they
 must register the street name and address with the town hall, which
