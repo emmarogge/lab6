@@ -10,7 +10,7 @@
      Using ADTs to enforce invariants
      Implementing polymorphic ADTs
  *)
-
+open Pervasives ;;
 (*======================================================================
                           Part 1: Camlville
                   Variants and invariants revisited
@@ -59,8 +59,14 @@ How might you use ADTs to enforce this invariant on street names?
 (Try this exercise first. If you can't get it to compile against our
 unit tests, see http://tiny.cc/lab6-1 for our solution.)
 ......................................................................*)
+type street = | Stephansplatz 
+              | Stiftgasse 
+              | MassAve 
+              | MainStreet ;;
 
-type residence = NotImplemented ;;
+type address = {mailbox : int ; street : street ; zipcode : string} ;; 
+
+type residence = House of address | Apartment of int * address ;;
 
 (* After implementing the residence type, please compare with our type
 definition at http://tiny.cc/lab6-1. Consider the tradeoffs we may
@@ -87,16 +93,20 @@ as non-base-10 numbers. For example, "0x100" (hexadecimal) may or may
 not pass your test but "abcde" definitely should not.
 ......................................................................*)
 
-let valid_zip = fun _ -> failwith "valid_zip not implemented" ;;
-
+let valid_zip (z : string) : bool = 
+  if (String.length z) <> 5 then false
+  else if (int_of_string_opt z) < Some 0 || (int_of_string_opt z) = None then false 
+  else true ;;
 (*......................................................................
 Exercise 3: Define a function, valid_residence, that enforces proper
 zipcodes, and mailbox and unit numbers above 0. It should return true
 if it is valid and false otherwise.
 ......................................................................*)
 
-let valid_residence =
-  fun _ -> failwith "valid_residence not implemented" ;;
+let valid_residence (res :  residence) : bool =
+  match res with
+  | House address -> (valid_zip address.zipcode)  && (address.mailbox > 0) 
+  | Apartment (unit, address) -> (valid_zip address.zipcode) &&  (address.mailbox > 0) && (unit > 0);;
 
 (*......................................................................
 Exercise 4: Time to get neighborly. Define a function that takes two
