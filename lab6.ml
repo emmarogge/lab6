@@ -74,7 +74,7 @@ let street_string (s : street) : string =
 type address = {mailbox : int ; street : street ; zipcode : string} ;;
 
 (* let to_string ({mailbox; street; zipcode} : address) : string =
-  (string_of_int mailbox) ^ " " ^ (street_string street) ^ " " ^ zipcode;; *)
+   (string_of_int mailbox) ^ " " ^ (street_string street) ^ " " ^ zipcode;; *)
 
 type residence = House of address | Apartment of int * address ;;
 
@@ -138,9 +138,9 @@ let extract_address (r : residence) : address =
 
 let neighbors (place1 : residence) (place2 : residence) : bool =
   let addr1, addr2 = extract_address place1, extract_address place2 in
-(*   Printf.printf "Neighbors...A1: %s A2: %s \n"
-    (to_string (extract_address place1))
-    (to_string (extract_address place2)); *)
+  (*   Printf.printf "Neighbors...A1: %s A2: %s \n"
+       (to_string (extract_address place1))
+       (to_string (extract_address place2)); *)
   (addr1.street) = (addr2.street)
   && addr1.zipcode = addr2.zipcode ;;
 
@@ -196,8 +196,8 @@ let choose_residence (h::t : residence list) : residence option =
 type town_record = { residence : residence; name : string } ;;
 
 let record_residence (address : residence) (name : string) : town_record =
-(*   Printf.printf "Address: %s Owned by %s \n"
-    (to_string (extract_address address)) name; *)
+  (*   Printf.printf "Address: %s Owned by %s \n"
+       (to_string (extract_address address)) name; *)
   if (valid_residence(address)) then {residence=address; name=name}
   else raise (Invalid_argument "Address not valid!");;
 (*......................................................................
@@ -220,7 +220,7 @@ let named_neighbors (n1 : string) (n2 : string) (recd_lst : town_record list) : 
   (* Printf.printf "N1: %s N2: %s \n" n1 n2; *)
   let r1 = List.find (fun x -> x.name = n1) recd_lst in
   let r2 = List.find (fun x -> x.name = n2) recd_lst in
-(*   Printf.printf "R1: %s R2: %s \n" r1.name r2.name; *)
+  (*   Printf.printf "R1: %s R2: %s \n" r1.name r2.name; *)
   (* let a1 = extract_address r1.residence in *)
   (* let a2 = extract_address r2.residence in *)
   (* Printf.printf "A1: %s A2: %s \n" (to_string a1) (to_string a2); *)
@@ -266,7 +266,8 @@ let rec leaf_count (tree: 'a bintree) : int =
   returns true if value is stored at some node in the tree and false
   otherwise.
   ......................................................................*)
-let find = fun _ -> failwith "find not implemented" ;;
+let find (v : 'a) (tree : 'a bintree) : bool =
+  failwith "find not implemented" ;;
 
 (*......................................................................
   Exercise 12: Define a function "min_value", such that "min_value tree"

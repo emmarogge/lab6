@@ -91,8 +91,17 @@ let test_leaf_count () =
   unit_test ((leaf_count t) = 2) "leaf_count small";
   unit_test (leaf_count (Node (3, t, t)) = 4) "leaf_count bigger";;
 
+let test_find () =
+  let leaf = Leaf in
+  let t = Node (1, leaf, leaf) in
+  let t = Node (3, t, t) in
+  let t = Node (5, t, leaf) in
+  unit_test (not (find 7 t)) "find false";
+  unit_test (find 3 t) "find true";;
+
 
 let test_all () =
+  print_endline "=======Part I=======";
   test_valid_zip ();
   test_valid_residence ();
   test_neighbors ();
@@ -100,6 +109,10 @@ let test_all () =
   test_choose_residence ();
   test_record_residence ();
   test_named_neighbors ();
-  test_leaf_count () ;;
+  print_endline "";
+  print_endline "=======Part II=======";
+  test_leaf_count ();
+  test_find();
+  print_endline "";;
 
 let _ = test_all ();;
