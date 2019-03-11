@@ -96,8 +96,8 @@ let test_find () =
   let t = Node (1, leaf, leaf) in
   let t = Node (3, t, t) in
   let t = Node (5, t, leaf) in
-  unit_test (not (find 7 t)) "find false";
-  unit_test (find 3 t) "find true";;
+  unit_test (not (find t 7)) "find false";
+  unit_test (find t 3) "find true";;
 
 let test_min_value () =
   let leaf = Leaf in

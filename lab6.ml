@@ -266,10 +266,10 @@ let rec leaf_count (tree: 'a bintree) : int =
   returns true if value is stored at some node in the tree and false
   otherwise.
   ......................................................................*)
-let rec find (v : 'a) (tree : 'a bintree) : bool =
+let rec find (tree : 'a bintree) (v : 'a) : bool =
   match tree with
   | Leaf -> false
-  | Node (e, left, right) ->  (e = v) || find v left || find v right
+  | Node (e, left, right) ->  (e = v) || find left v || find right v
 ;;
 
 (*......................................................................
