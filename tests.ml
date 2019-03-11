@@ -108,6 +108,17 @@ let test_min_value () =
   let t = Node (5, t, leaf) in
   unit_test ((min_value t) = Some ~-1) "min_value tree";;
 
+let test_map_tree () =
+  let leaf = Leaf in
+  let t = Node (1, leaf, leaf) in
+  let t' = Node (~- 1, leaf, leaf) in
+  unit_test ((map_tree (fun x -> ( * ) x 10) t)
+             = Node (10, leaf, leaf)) "map_tree int_product";
+  let t = Node ("emma", leaf, leaf) in
+  let t = Node ("edgar", t, leaf) in
+  unit_test (((map_tree) (fun s -> "hello, " ^ s) t)
+             = Node ("hello, edgar", Node ("hello, emma", leaf, leaf), leaf))
+    "map_tree concat_string";;
 
 let test_all () =
   print_endline "=======Part I=======";
@@ -123,6 +134,7 @@ let test_all () =
   test_leaf_count ();
   test_find();
   test_min_value();
+  test_map_tree();
   print_endline "";;
 
 let _ = test_all ();;

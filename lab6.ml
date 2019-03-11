@@ -301,5 +301,5 @@ let rec min_value (tree : 'a bintree): 'a option =
   polymorphism.
   ......................................................................*)
 
-let map_tree =
-  fun () -> failwith "map_tree not implemented" ;;
+let map_tree (f : 'b -> 'c) (tree: 'b bintree) : 'c bintree =
+  failwith "map_tree not implemented" ;;
