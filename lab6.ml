@@ -279,8 +279,19 @@ let rec find (v : 'a) (tree : 'a bintree) : bool =
   values stored in the nodes of the tree.
   ......................................................................*)
 
-let min_value (tree : 'a bintree): 'a option =
-  failwith "min_value not implemented" ;;
+let rec min_value (tree : 'a bintree): 'a option =
+  let min_opt x y =
+    match x, y with
+    | None, None -> None
+    | Some x, None -> Some x
+    | None, Some y -> Some y
+    | Some x, Some y -> Some (if x < y then x else y) in
+  match tree with
+  | Leaf -> None
+  | Node (e, left, right) ->
+    min_opt (Some e)
+      (min_opt (min_value left)
+         (min_value right))
 
 (*......................................................................
   Exercise 13: Define a function "map_tree", such that "map_tree fn
