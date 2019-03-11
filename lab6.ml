@@ -266,8 +266,11 @@ let rec leaf_count (tree: 'a bintree) : int =
   returns true if value is stored at some node in the tree and false
   otherwise.
   ......................................................................*)
-let find (v : 'a) (tree : 'a bintree) : bool =
-  failwith "find not implemented" ;;
+let rec find (v : 'a) (tree : 'a bintree) : bool =
+  match tree with
+  | Leaf -> false
+  | Node (e, left, right) ->  (e = v) || find v left || find v right
+;;
 
 (*......................................................................
   Exercise 12: Define a function "min_value", such that "min_value tree"
