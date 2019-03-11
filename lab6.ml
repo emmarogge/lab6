@@ -42,13 +42,13 @@ open Pervasives ;;
   We will start by assuming there are no restrictions on the zip code,
   address and unit other than those given by their types (zip codes must
   be strings and mailboxes and unit numbers must be integers). Though
-  zipcodes on first glance are numbers, they are generally not treated
+  zip_codes on first glance are numbers, they are generally not treated
   as numbers. What would be the conceptual meaning of averaging
-  zipcodes? They also can contain leading zeros (Cambridge,
-  02138). Consequently, we choose to represent zipcodes as strings.
+  zip_codes? They also can contain leading zeros (Cambridge,
+  02138). Consequently, we choose to represent zip_codes as strings.
 
   However, there are only four streets in Camlville (regardless of
-  zipcode) which are the following:
+  zip_code) which are the following:
 
     Stephansplatz
     Stiftgasse
@@ -71,10 +71,10 @@ let street_string (s : street) : string =
   | MassAve -> "MassAve"
   | MainStreet -> "MainStreet" ;;
 
-type address = {mailbox : int ; street : street ; zipcode : string} ;;
+type address = {mailbox : int ; street : street ; zip_code : string} ;;
 
-(* let to_string ({mailbox; street; zipcode} : address) : string =
-   (string_of_int mailbox) ^ " " ^ (street_string street) ^ " " ^ zipcode;; *)
+(* let to_string ({mailbox; street; zip_code} : address) : string =
+   (string_of_int mailbox) ^ " " ^ (street_string street) ^ " " ^ zip_code;; *)
 
 type residence = House of address | Apartment of int * address ;;
 
@@ -87,7 +87,7 @@ type residence = House of address | Apartment of int * address ;;
    would like to keep it.
 
    Valid zip codes in Camlville are given as five digits. For example,
-   12345, 63130, and 02138 are valid zipcodes, but -0004, 2138, and F69A
+   12345, 63130, and 02138 are valid zip_codes, but -0004, 2138, and F69A
    are not. We'll represent zip codes with strings, but will want to be
    able to validate them appropriately. In this lab, we'll use the
    "valid_" validation convention from lab 5. *)
@@ -109,14 +109,14 @@ let valid_zip (z : string) : bool =
   else true ;;
 (*......................................................................
   Exercise 3: Define a function, valid_residence, that enforces proper
-  zipcodes, and mailbox and unit numbers above 0. It should return true
+  zip_codes, and mailbox and unit numbers above 0. It should return true
   if it is valid and false otherwise.
   ......................................................................*)
 
 let valid_residence (res :  residence) : bool =
   let valid_address
-      ({mailbox=mailbox; street=_ ; zipcode=zipcode} : address) : bool
-    = valid_zip zipcode && mailbox > 0 in
+      ({mailbox=mailbox; street=_ ; zip_code=zip_code} : address) : bool
+    = valid_zip zip_code && mailbox > 0 in
   match res with
   | House address -> valid_address address
   | Apartment (unit, address) -> valid_address address && unit > 0;;
@@ -125,7 +125,7 @@ let valid_residence (res :  residence) : bool =
   Exercise 4: Time to get neighborly. Define a function that takes two
   residences and outputs a bool indicating whether or not they are
   neighbors. In Camlville, a neighbor is someone living on the same
-  street in the same zipcode.
+  street in the same zip_code.
 
   Note: By this definition, a residence is considered to be its own
   neighbor.
@@ -142,7 +142,7 @@ let neighbors (place1 : residence) (place2 : residence) : bool =
        (to_string (extract_address place1))
        (to_string (extract_address place2)); *)
   (addr1.street) = (addr2.street)
-  && addr1.zipcode = addr2.zipcode ;;
+  && addr1.zip_code = addr2.zip_code ;;
 
 (*......................................................................
   Exercise 5: Lucky 7
@@ -301,5 +301,8 @@ let rec min_value (tree : 'a bintree): 'a option =
   polymorphism.
   ......................................................................*)
 
-let map_tree (f : 'b -> 'c) (tree: 'b bintree) : 'c bintree =
-  failwith "map_tree not implemented" ;;
+let rec map_tree (f : 'b -> 'c) (tree: 'b bintree) : 'c bintree =
+  match tree with
+  | Leaf -> Leaf
+  | Node (e, left, right) ->
+    Node ((f e), (map_tree f left), (map_tree f right));;
